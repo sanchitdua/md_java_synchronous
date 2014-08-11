@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="dependencies/enterprise2.jar"/>
+	<classpathentry kind="lib" path="dependencies/force-wsc-31.1.0.jar"/>
+	<classpathentry kind="lib" path="dependencies/metadata31.jar"/>
+	<classpathentry kind="lib" path="dependencies/partner31.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
