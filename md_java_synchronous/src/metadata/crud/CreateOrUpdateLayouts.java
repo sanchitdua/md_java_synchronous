@@ -13,11 +13,11 @@ import com.sforce.soap.metadata.*;
 import connection.ConnectionProvider;
 
 public class CreateOrUpdateLayouts {
-	public static void main(String... str) throws Exception{
-		CreateOrUpdateLayouts coul = new CreateOrUpdateLayouts();
-		coul.updateLayoutItems();
-	}
-	
+
+	public MetadataConnection mConnection = null;
+	public PartnerConnection pConnection = null;
+	public boolean isTest = false;
+
 	public void updateLayoutItems() throws Exception {
 		// Fields to be added on Layout
 		Set<String> fields = new HashSet<String>();
@@ -25,13 +25,13 @@ public class CreateOrUpdateLayouts {
 		fields.add("ContactNo__c");
 		fields.add("Email_Id__c");
 		fields.add("Last_Name__c");
-		MetadataConnection mConnection = ConnectionProvider.getMetadataConnection(); // getting metadata connection
-		PartnerConnection pConnection = ConnectionProvider.getPartnerConnection(); // getting partner connection
+		mConnection = ConnectionProvider.getMetadataConnection(); // getting metadata connection
+		pConnection = ConnectionProvider.getPartnerConnection(); // getting partner connection
 		System.out.println("Logged in...");
 		updateLayout(mConnection, null, "MyCustomObject__c", "Custom _section_name", fields, true, pConnection);
 	} // END public void updateLayoutItems()
 
-	public static void updateLayout(MetadataConnection mConnection, String[] recordTypeTest, String sObjName, String secName, Set<String> f, boolean isNameAutoNumber, PartnerConnection pConnection){
+	public void updateLayout(MetadataConnection mConnection, String[] recordTypeTest, String sObjName, String secName, Set<String> f, boolean isNameAutoNumber, PartnerConnection pConnection){
 		try{
 			if(f!= null){
 				boolean nameSet = false;
@@ -278,20 +278,24 @@ public class CreateOrUpdateLayouts {
 				lay1.setEmailDefault(true);
 				lay1.setLayoutSections(sectionNameWithLayoutSection.values().toArray(new LayoutSection[sectionNameWithLayoutSection.size()]));
 				sectionNameWithLayoutSection.clear();
-				SaveResult[] sr = mConnection.updateMetadata(new Metadata[]{lay1}); // updating the layout
-				for (SaveResult r : sr) {
-		            if (r.isSuccess()) {
-		                System.out.println("Success: Updated layout " + r.getFullName());
-		            } else {
-		                System.out.println("Warning: Errors were encountered while creating: "+ r.getFullName());
-		                for (com.sforce.soap.metadata.Error e : r.getErrors()) {
-		                	System.out.println("Error: Error in updating Profile");
-		                    
-		                    System.out.println("Error message: " + e.getMessage());
-		                    System.out.println("Status code: " + e.getStatusCode());
-		                }
-		            }
-		        }
+				SaveResult[] sr = null;
+
+				if(!isTest){
+					sr = mConnection.updateMetadata(new Metadata[]{lay1}); // updating the layout
+					for (SaveResult r : sr) {
+						if (r.isSuccess()) {
+							System.out.println("Success: Updated layout " + r.getFullName());
+						} else {
+							System.out.println("Warning: Errors were encountered while creating: "+ r.getFullName());
+							for (com.sforce.soap.metadata.Error e : r.getErrors()) {
+								System.out.println("Error: Error in updating Profile");
+
+								System.out.println("Error message: " + e.getMessage());
+								System.out.println("Status code: " + e.getStatusCode());
+							}
+						}
+					}
+				}
 				dsrArray = null;
 				fields.clear();
 				fields = null;
